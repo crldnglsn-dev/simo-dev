@@ -57,8 +57,6 @@
     .btn { display: inline-flex; align-items: center; gap: 0.5rem; padding: 0.85rem 1.8rem; border-radius: 6px; font-family: var(--font-mono); font-size: 0.82rem; font-weight: 500; letter-spacing: 0.04em; text-decoration: none; cursor: pointer; border: none; transition: all 0.2s; }
     .btn-primary { background: var(--accent); color: #0a0a0f; }
     .btn-primary:hover { background: #8ff5d3; transform: translateY(-1px); box-shadow: 0 8px 24px rgba(108,240,194,0.2); }
-    .btn-secondary { background: transparent; color: var(--text); border: 1px solid var(--border); }
-    .btn-secondary:hover { border-color: var(--accent); color: var(--accent); transform: translateY(-1px); }
 
     section { padding: 6rem 3rem; max-width: 1100px; margin: 0 auto; }
     .section-label { font-size: 0.7rem; letter-spacing: 0.15em; text-transform: uppercase; color: var(--accent); margin-bottom: 0.75rem; }
@@ -68,36 +66,12 @@
     .app-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; position: relative; overflow: hidden; }
     .app-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.4; }
 
-    .app-logo-wrap {
-      width: 80px; height: 80px; border-radius: 20px;
-      overflow: hidden; margin-bottom: 1.5rem;
-      box-shadow: 0 12px 40px rgba(108,240,194,0.15);
-      flex-shrink: 0; pointer-events: none; user-select: none;
-    }
-    .app-logo-wrap img {
-      width: 100%; height: 100%; object-fit: cover; display: block;
-    }
-    .app-logo-fallback {
-      width: 80px; height: 80px; border-radius: 20px;
-      background: linear-gradient(135deg, var(--accent), var(--accent2));
-      display: flex; align-items: center; justify-content: center;
-      font-size: 2.2rem; margin-bottom: 1.5rem;
-      box-shadow: 0 12px 40px rgba(108,240,194,0.15);
-    }
+    .app-logo-wrap { width: 80px; height: 80px; border-radius: 20px; overflow: hidden; margin-bottom: 1.5rem; box-shadow: 0 12px 40px rgba(108,240,194,0.15); flex-shrink: 0; }
+    .app-logo-wrap img { width: 100%; height: 100%; object-fit: cover; display: block; }
 
     .app-name { font-family: var(--font-display); font-size: 2rem; font-weight: 800; letter-spacing: -0.02em; line-height: 1; margin-bottom: 0.35rem; }
     .app-version { font-size: 0.72rem; color: var(--muted); letter-spacing: 0.06em; margin-bottom: 0; }
     .app-desc { color: var(--muted); font-size: 0.85rem; line-height: 1.75; margin-bottom: 1.5rem; margin-top: 1rem; }
-    .app-badges { display: flex; gap: 0.65rem; flex-wrap: wrap; margin-bottom: 2rem; }
-    .badge { font-size: 0.7rem; padding: 0.3rem 0.7rem; border-radius: 100px; background: rgba(108,240,194,0.08); color: var(--accent); border: 1px solid rgba(108,240,194,0.15); letter-spacing: 0.05em; }
-
-    .install-steps { background: rgba(255,255,255,0.02); border: 1px solid var(--border); border-radius: 12px; padding: 1.5rem; }
-    .install-steps h4 { font-size: 0.7rem; letter-spacing: 0.1em; text-transform: uppercase; color: var(--muted); margin-bottom: 1rem; }
-    .step { display: flex; align-items: flex-start; gap: 0.85rem; margin-bottom: 0.85rem; }
-    .step:last-child { margin-bottom: 0; }
-    .step-num { min-width: 22px; height: 22px; border-radius: 50%; background: rgba(108,240,194,0.1); border: 1px solid rgba(108,240,194,0.2); color: var(--accent); font-size: 0.65rem; font-weight: 600; display: flex; align-items: center; justify-content: center; margin-top: 1px; flex-shrink: 0; }
-    .step p { font-size: 0.8rem; color: var(--muted); line-height: 1.6; }
-    .step p strong { color: var(--text); }
 
     .download-counter { display: flex; align-items: center; gap: 0.75rem; padding: 0.8rem 1rem; background: rgba(108,240,194,0.04); border: 1px solid rgba(108,240,194,0.12); border-radius: 8px; margin-bottom: 1.25rem; }
     .counter-dot { width: 8px; height: 8px; border-radius: 50%; background: var(--accent); flex-shrink: 0; animation: blink 2s ease infinite; }
@@ -106,10 +80,7 @@
 
     .download-main { display: flex; align-items: center; gap: 1.2rem; padding: 1.2rem 1.8rem; background: var(--accent); color: #0a0a0f; border-radius: 10px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; cursor: pointer; border: none; font-family: var(--font-mono); width: 100%; }
     .download-main:hover { background: #8ff5d3; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(108,240,194,0.25); }
-    .download-main .dl-icon { font-size: 1.4rem; }
-    .download-main .dl-text { text-align: left; flex: 1; }
-    .download-main .dl-text small { display: block; font-size: 0.65rem; opacity: 0.7; font-weight: 400; letter-spacing: 0.04em; }
-    .dl-arrow { font-size: 1.1rem; opacity: 0.7; }
+
     .github-link { display: flex; align-items: center; justify-content: center; gap: 0.6rem; margin-top: 0.85rem; padding: 0.85rem; background: transparent; border: 1px solid var(--border); border-radius: 8px; text-decoration: none; color: var(--muted); font-size: 0.78rem; transition: all 0.2s; }
     .github-link:hover { border-color: var(--accent); color: var(--accent); }
 
@@ -145,6 +116,7 @@
     </div>
   </section>
 
+  <!-- Apps Section -->
   <section id="apps">
     <div class="section-label">Apps</div>
     <h2 class="section-title">My Projects</h2>
@@ -186,33 +158,22 @@
   <script>
     const counterEl = document.getElementById('download-count');
     const downloadBtn = document.getElementById('download-btn');
-
-    const counterAPIKey = 'ut_JWGub5naMQPoY86Xbnocz6zykSENmS9gDkEgWES9'; 
-    const counterName = 'crldnglsn-devs-team-3495/flutter-app-downloads'; 
+    const counterName = 'flutter-app-downloads';
     const downloadLink = 'https://github.com/crldnglsn-dev/simove/releases/download/v1.1.0/SIMOVE-v1.1.0.apk';
 
     async function loadCounter() {
       try {
-        const res = await fetch(`https://api.counterapi.dev/v2/${counterName}`, {
-          headers: { 'Authorization': `Bearer ${counterAPIKey}` }
-        });
+        const res = await fetch(`https://api.countapi.xyz/get/${counterName}`);
         const data = await res.json();
-        counterEl.textContent = data.value ?? 0;
-      } catch (err) {
-        console.error('Counter load error:', err);
-      }
+        counterEl.textContent = data.value || 0;
+      } catch (err) { console.error('Counter load error:', err); }
     }
-
     loadCounter();
 
     downloadBtn.addEventListener('click', async () => {
       try {
-        const res = await fetch(`https://api.counterapi.dev/v2/${counterName}/up`, {
-          method: 'POST',
-          headers: { 'Authorization': `Bearer ${counterAPIKey}` }
-        });
-        const data = await res.json();
-        counterEl.textContent = data.value ?? parseInt(counterEl.textContent) + 1;
+        await fetch(`https://api.countapi.xyz/hit/${counterName}`);
+        counterEl.textContent = parseInt(counterEl.textContent) + 1;
 
         const a = document.createElement('a');
         a.href = downloadLink;
@@ -231,13 +192,10 @@
         toast.style.color = '#0a0a0f';
         toast.style.borderRadius = '8px';
         toast.style.fontWeight = '600';
-        toast.style.zIndex = '9999';
         document.body.appendChild(toast);
         setTimeout(() => toast.remove(), 3000);
 
-      } catch (err) {
-        console.error('Download error:', err);
-      }
+      } catch (err) { console.error('Download error:', err); }
     });
   </script>
 </body>
