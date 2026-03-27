@@ -68,10 +68,6 @@
     .app-card { background: var(--surface); border: 1px solid var(--border); border-radius: 16px; padding: 3rem; display: grid; grid-template-columns: 1fr 1fr; gap: 3rem; align-items: start; position: relative; overflow: hidden; }
     .app-card::before { content: ''; position: absolute; top: 0; left: 0; right: 0; height: 1px; background: linear-gradient(90deg, transparent, var(--accent), transparent); opacity: 0.4; }
 
-    /* =====================================================
-       APP LOGO — to change: replace the src below with
-       your image URL or a relative path like "logo.png"
-       ===================================================== */
     .app-logo-wrap {
       width: 80px; height: 80px; border-radius: 20px;
       overflow: hidden; margin-bottom: 1.5rem;
@@ -81,7 +77,6 @@
     .app-logo-wrap img {
       width: 100%; height: 100%; object-fit: cover; display: block;
     }
-    /* Fallback shown when no image is set */
     .app-logo-fallback {
       width: 80px; height: 80px; border-radius: 20px;
       background: linear-gradient(135deg, var(--accent), var(--accent2));
@@ -201,25 +196,9 @@
   <div class="app-card">
     <div>
 
-      <!--
-        ╔══════════════════════════════════════════════╗
-        ║  APP LOGO — only you can change this         ║
-        ║                                              ║
-        ║  OPTION A — use an image file:               ║
-        ║  1. Put your logo (e.g. logo.png) in the     ║
-        ║     same folder as index.html                ║
-        ║  2. Replace the emoji fallback below with:   ║
-        ║     <div class="app-logo-wrap">              ║
-        ║       <img src="logo.png" alt="SIMOVE" />    ║
-        ║     </div>                                   ║
-        ║                                              ║
-        ║  OPTION B — use an online image URL:         ║
-        ║     <img src="https://..." alt="SIMOVE" />   ║
-        ║                                              ║
-        ║  Right now it shows the ⚡ emoji as default  ║
-        ╚══════════════════════════════════════════════╝
-      -->
-      <div class="app-logo-fallback">⚡</div>
+      <div class="app-logo-wrap">
+  <img src="simove-logo.png" alt="SIMOVE Logo" />
+</div>
 
       <div class="app-name">SIMOVE</div>
       <div class="app-version">Version 1.1.0 · Android APK</div>
@@ -333,12 +312,8 @@
 </div>
 
 <script>
-  // ================================================
-  // ✏️  EDIT THIS — your GitHub APK direct link
-  // ================================================
-  const APK_URL = 'https://github.com/crldnglsn-dev/YOUR_REPO/releases/latest/download/simove.apk';
+  const APK_URL = 'https://github.com/crldnglsn-dev/simove/releases/download/v1.1.0/SIMOVE-v1.1.0.apk';
   const COUNTER_SLUG = 'simove-v110-crldnglsn';
-  // ================================================
 
   const API_BASE = `https://counterapi.dev/api/${COUNTER_SLUG}`;
 
