@@ -333,32 +333,41 @@
 </div>
 
 <script>
-  // ================================================
-  // ✏️  EDIT THIS — your GitHub APK direct link
-  // ================================================
-  const APK_URL = 'https://github.com/crldnglsn-dev/YOUR_REPO/releases/latest/download/simove.apk';
-  const COUNTER_SLUG = 'simove-v110-crldnglsn';
-  // ================================================
+  // ===============================
+  // CONFIG — change these if needed
+  // ===============================
+  const APK_URL = 'https://github.com/crldnglsn-dev/simove/releases/download/v1.1.0/SIMOVE-v1.1.0.apk';
+  const API_BASE = 'https://api.counterapi.dev/v2/crldnglsn-devs-team-3495/simove-downloads';
+  const API_KEY = 'ut_JWGub5naMQPoY86Xbnocz6zykSENmS9gDkEgWES9'; // optional: put your CounterAPI key here if the counter is private
 
-  const API_BASE = `https://counterapi.dev/api/${COUNTER_SLUG}`;
+  // ===============================
+  // FUNCTIONS
+  // ===============================
 
+  // Load the current download count
   async function loadCount() {
     try {
-      const res = await fetch(`${API_BASE}/get`);
+      const res = await fetch(API_BASE, {
+        headers: API_KEY ? { 'Authorization': `Bearer ${API_KEY}` } : {}
+      });
       const data = await res.json();
       setCount(data.value ?? 0);
-    } catch {
+    } catch (err) {
+      console.error('Failed to load count from CounterAPI', err);
       setCount(parseInt(localStorage.getItem('simove_dl') || '0'));
     }
   }
 
+  // Update the DOM with formatted count
   function setCount(n) {
-    const s = Number(n).toLocaleString();
-    document.getElementById('dlCount').textContent = s;
-    document.getElementById('statDownloads').textContent = s;
+    const formatted = Number(n).toLocaleString();
+    document.getElementById('dlCount').textContent = formatted;
+    document.getElementById('statDownloads').textContent = formatted;
   }
 
+  // Handle APK download & increment counter
   async function handleDownload() {
+    // Trigger APK download
     const a = document.createElement('a');
     a.href = APK_URL;
     a.download = 'SIMOVE-v1.1.0.apk';
@@ -366,21 +375,29 @@
     a.click();
     document.body.removeChild(a);
 
+    // Try to increment counter via API
     try {
-      const res = await fetch(`${API_BASE}/hit`);
+      const res = await fetch(`${API_BASE}/up`, {
+        method: 'POST',
+        headers: API_KEY ? { 'Authorization': `Bearer ${API_KEY}` } : {}
+      });
       const data = await res.json();
       setCount(data.value ?? 0);
-    } catch {
+      localStorage.setItem('simove_dl', data.value ?? 0);
+    } catch (err) {
+      console.error('Failed to increment count on CounterAPI', err);
       const n = parseInt(localStorage.getItem('simove_dl') || '0') + 1;
       localStorage.setItem('simove_dl', n);
       setCount(n);
     }
 
+    // Show toast notification
     const t = document.getElementById('toast');
     t.classList.add('show');
     setTimeout(() => t.classList.remove('show'), 3500);
   }
 
+  // Load count on page load
   loadCount();
 </script>
 </body>
