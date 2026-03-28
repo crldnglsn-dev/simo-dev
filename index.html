@@ -70,6 +70,28 @@
     .github-link { display:flex; align-items:center; justify-content:center; gap:0.6rem; margin-top:0.85rem; padding:0.85rem; background:transparent; border:1px solid var(--border); border-radius:8px; text-decoration:none; color: var(--muted); font-size:0.78rem; transition:all 0.2s; }
     .github-link:hover { border-color: var(--accent); color: var(--accent); }
 
+    /* Toast notification */
+    .toast {
+      position: fixed;
+      bottom: 2rem;
+      right: 2rem;
+      background: rgba(108,240,194,0.9);
+      color: #0a0a0f;
+      padding: 1rem 1.5rem;
+      border-radius: 8px;
+      opacity: 0;
+      transform: translateY(20px);
+      transition: all 0.3s ease;
+      z-index: 2000;
+      display: flex;
+      gap: 0.5rem;
+      align-items: center;
+    }
+    .toast.show {
+      opacity: 1;
+      transform: translateY(0);
+    }
+
     /* ====== Responsive ====== */
     @media (max-width:768px){ nav{padding:1rem 1.5rem;} .nav-links{display:none;} section{padding:4rem 1.5rem;} .hero{padding:0 1.5rem;} .app-card{grid-template-columns:1fr; gap:2rem;} .about-grid{grid-template-columns:1fr;} .footer-inner{grid-template-columns:1fr; text-align:center;} .footer-right{justify-content:center;} .footer-bottom{flex-direction:column; gap:0.5rem; text-align:center;} }
   </style>
@@ -140,128 +162,46 @@
         <span class="dl-arrow">↓</span>
       </button>
       <a href="https://github.com/crldnglsn-dev" target="_blank" class="github-link">
-        🐙 View on GitHub — crldnglsn-dev
+        <span>View on GitHub</span> →
       </a>
     </div>
   </div>
 </section>
 
-<div class="divider"></div>
-
-<section id="about">
-  <div class="section-label">// about</div>
-  <div class="section-title">Who is Simo?</div>
-  <div class="about-grid">
-    <div class="about-text">
-      <p>Hey — I'm <strong>Simo</strong>, a Filipino 🇵🇭 IT student who loves turning ideas into real, working software.</p>
-      <p>I build <strong>Android apps</strong>, web tools, and personal projects as part of my journey in tech. Every project I ship teaches me something new — and I share them all right here.</p>
-      <p>Whether you're here to download SIMOVE or just check out what I've been building — welcome to my corner of the internet.</p>
-      <div class="tags-row">
-        <span class="tag">IT Student</span>
-        <span class="tag">Android Dev</span>
-        <span class="tag">Builder</span>
-        <span class="tag">Filipino 🇵🇭</span>
-        <span class="tag">Open Source</span>
-        <span class="tag">Always Learning</span>
-      </div>
-    </div>
-    <div class="about-stats">
-      <div class="stat-card"><div class="stat-num" id="statDownloads">—</div><div class="stat-label">App downloads</div></div>
-      <div class="stat-card"><div class="stat-num">01</div><div class="stat-label">App live now</div></div>
-      <div class="stat-card"><div class="stat-num">IT</div><div class="stat-label">Student</div></div>
-      <div class="stat-card"><div class="stat-num">PH</div><div class="stat-label">Based in Philippines</div></div>
-    </div>
-  </div>
-</section>
-
-<div class="divider"></div>
-
-<section id="contact">
-  <div class="section-label">// contact</div>
-  <div class="section-title">Find me online</div>
-  <div class="contact-grid">
-    <a href="https://github.com/crldnglsn-dev" target="_blank" class="contact-card">
-      <div class="contact-icon">🐙</div>
-      <div class="contact-info"><small>GitHub</small><span>crldnglsn-dev</span></div>
-    </a>
-    <a href="mailto:dinglasan.it@gmail.com" class="contact-card">
-      <div class="contact-icon">✉️</div>
-      <div class="contact-info"><small>Email</small><span>dinglasan.it@gmail.com</span></div>
-    </a>
-  </div>
-</section>
-
-<footer>
-  <div class="footer-inner">
-    <div class="footer-brand">
-      <a href="#" class="footer-logo">si<span>mo</span></a>
-      <p>Filipino IT student.<br>Building real things, one project at a time.</p>
-    </div>
-    <div class="footer-center">
-      <span class="copy">© 2026 Simo. All rights reserved.</span>
-      <p>Made with ♥ in the Philippines 🇵🇭</p>
-    </div>
-    <div class="footer-right">
-      <a href="#app" class="footer-link">App</a>
-      <a href="#about" class="footer-link">About</a>
-      <a href="#contact" class="footer-link">Contact</a>
-      <a href="https://github.com/crldnglsn-dev" target="_blank" class="footer-link">GitHub</a>
-    </div>
-  </div>
-  <div class="footer-bottom">
-    <p>SIMOVE v1.1.0 — Android APK</p>
-    <div class="made">Deployed on <span style="color:var(--accent);font-weight:500;margin-left:0.3rem;">Vercel</span></div>
-  </div>
-</footer>
-
-<div class="toast" id="toast">
-  <span>✅</span>
-  <span>Download started! Check your notifications.</span>
-</div>
+<div class="toast" id="toast">Download started!</div>
 
 <script>
-  const WORKSPACE = 'crldnglsn-dev';
+const WORKSPACE = 'crldnglsn-dev';
 const COUNTER = 'simove-downloads';
-const APK_URL = 'https://github.com/crldnglsn-dev/simove/releases/download/v1.1.0/SIMOVE-v1.1.0.apk';
-const API_KEY = 'ut_JWGub5naMQPoY86Xbnocz6zykSENmS9gDkEgWES9'; // Replace with your real API key
+const API_KEY = 'ut_JWGub5naMQPoY86Xbnocz6zykSENmS9gDkEgWES9';
 const API_BASE = `https://api.counterapi.dev/v2/${WORKSPACE}/${COUNTER}`;
+const APK_URL = 'https://github.com/crldnglsn-dev/simove/releases/download/v1.1.0/SIMOVE-v1.1.0.apk';
 
-function formatCount(num) {
-  return num.toLocaleString();
-}
-
-// Fetch current counter value
 async function loadCount() {
   try {
-    const res = await fetch(API_BASE, {
-      headers: {
-        'Authorization': `Bearer ${API_KEY}`
-      }
-    });
+    const res = await fetch(`${API_BASE}`);
     const data = await res.json();
-    document.getElementById('dlCount').textContent = formatCount(data.value ?? 0);
+    document.getElementById('dlCount').textContent = Number(data.value).toLocaleString();
   } catch (err) {
-    console.error('Failed to fetch counter', err);
+    console.error(err);
   }
 }
 
-// Increment counter and trigger download
 async function handleDownload() {
+  const btn = document.querySelector('.download-main');
+  btn.disabled = true;
+
   try {
-    // Increment counter
     await fetch(`${API_BASE}/up`, {
-      method: 'GET',
-      headers: {
-        'Authorization': `Bearer ${API_KEY}`
-      }
+      method: 'POST',
+      headers: { 'Authorization': `Bearer ${API_KEY}` }
     });
-    // Refresh counter immediately
     loadCount();
   } catch (err) {
-    console.error('Failed to increment counter', err);
+    console.error(err);
   }
 
-  // Trigger download
+  // trigger download
   const a = document.createElement('a');
   a.href = APK_URL;
   a.download = 'SIMOVE-v1.1.0.apk';
@@ -269,13 +209,16 @@ async function handleDownload() {
   a.click();
   document.body.removeChild(a);
 
-  // Toast notification
+  // show toast
   const t = document.getElementById('toast');
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3500);
+
+  // re-enable button
+  setTimeout(() => btn.disabled = false, 1500);
 }
 
-// Load initial count and refresh every 10 seconds
+// initial load & auto-refresh
 loadCount();
 setInterval(loadCount, 10000);
 </script>
