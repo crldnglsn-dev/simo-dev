@@ -327,21 +327,18 @@
 </div>
 
 <script>
-// GitHub API Configuration - UPDATE THESE VALUES
 const GITHUB_CONFIG = {
-  owner: 'crldnglsn-dev',  // ← Your GitHub username
-  repo: 'simove',            // ← Your repository name
-  tag: 'v1.1.0'              // ← Your release tag
+  owner: 'crldnglsn-dev',  
+  repo: 'simove',           
+  tag: 'v1.1.0'              
 };
 
-const APK_ASSET_NAME = 'SIMOVE-v1.1.0.apk';  // ← Your APK filename in the release
+const APK_ASSET_NAME = 'SIMOVE-v1.1.0.apk'; 
 
-// Spam Protection Variables
 let lastClickTime = 0;
-const CLICK_COOLDOWN = 5000; // 5 seconds between clicks
+const CLICK_COOLDOWN = 5000; 
 const SESSION_KEY = 'simove-downloaded';
 
-// Fetch download count from GitHub API
 async function loadGitHubCount() {
   const countEl = document.getElementById('dlCount');
   const statDownloadsEl = document.getElementById('statDownloads');
@@ -362,15 +359,12 @@ async function loadGitHubCount() {
     }
     
     const data = await response.json();
-    
-    // Sum download counts from all assets
     let totalDownloads = 0;
     
     if (data.assets && data.assets.length > 0) {
       totalDownloads = data.assets.reduce((sum, asset) => sum + (asset.download_count || 0), 0);
     }
     
-    // Update both counters with animation
     animateNumber(countEl, totalDownloads);
     animateNumber(statDownloadsEl, totalDownloads);
     errorEl.style.display = 'none';
@@ -383,7 +377,6 @@ async function loadGitHubCount() {
   }
 }
 
-// Animate number counting up
 function animateNumber(element, target) {
   const duration = 1000;
   const start = 0;
@@ -392,8 +385,7 @@ function animateNumber(element, target) {
   function update(currentTime) {
     const elapsed = currentTime - startTime;
     const progress = Math.min(elapsed / duration, 1);
-    
-    // Easing function
+
     const easeOutQuart = 1 - Math.pow(1 - progress, 4);
     const current = Math.floor(start + (target - start) * easeOutQuart);
     
@@ -409,7 +401,6 @@ function animateNumber(element, target) {
   requestAnimationFrame(update);
 }
 
-// Show toast message
 function showToast(message) {
   const toast = document.getElementById('toast');
   const toastMsg = document.getElementById('toastMsg');
@@ -418,17 +409,14 @@ function showToast(message) {
   setTimeout(() => toast.classList.remove('show'), 3500);
 }
 
-// Handle download button click with spam protection
 function handleDownload() {
   const btn = document.getElementById('downloadBtn');
-  
-  // Protection 1: Check if already downloaded this session
+
   if (sessionStorage.getItem(SESSION_KEY)) {
     showToast('✋ You already downloaded this session!');
     return;
   }
-  
-  // Protection 2: Check cooldown (5 seconds between clicks)
+
   const now = Date.now();
   if (now - lastClickTime < CLICK_COOLDOWN) {
     const waitSeconds = Math.ceil((CLICK_COOLDOWN - (now - lastClickTime)) / 1000);
@@ -436,14 +424,11 @@ function handleDownload() {
     return;
   }
   lastClickTime = now;
-  
-  // Mark as downloaded for this session
+
   sessionStorage.setItem(SESSION_KEY, 'true');
-  
-  // Disable button visually
+
   btn.disabled = true;
-  
-  // Trigger download from GitHub releases
+
   const apkUrl = `https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/releases/download/${GITHUB_CONFIG.tag}/${APK_ASSET_NAME}`;
   
   const a = document.createElement('a');
@@ -452,23 +437,18 @@ function handleDownload() {
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-  
-  // Show success toast
+
   showToast('✅ Download started! Check your notifications.');
-  
-  // Refresh count after delay (GitHub updates take ~30 seconds)
+
   setTimeout(() => {
     loadGitHubCount();
     btn.disabled = false;
   }, 2000);
 }
 
-// Initialize on page load
 loadGitHubCount();
 
-// Auto-refresh every 30 seconds (GitHub caches for ~30s)
 setInterval(loadGitHubCount, 30000);
 </script>
-
 </body>
 </html>
