@@ -220,49 +220,64 @@
 </div>
 
 <script>
-  const APK_URL = 'https://github.com/crldnglsn-dev/simove/releases/download/v1.1.0/SIMOVE-v1.1.0.apk';
-  const API_BASE = 'https://api.counterapi.dev/v1/crldnglsn-dev/simove-downloads';
+  const WORKSPACE = 'crldnglsn-dev';
+const COUNTER = 'simove-downloads';
+const APK_URL = 'https://github.com/crldnglsn-dev/simove/releases/download/v1.1.0/SIMOVE-v1.1.0.apk';
+const API_KEY = 'ut_JWGub5naMQPoY86Xbnocz6zykSENmS9gDkEgWES9'; // Replace with your real API key
+const API_BASE = `https://api.counterapi.dev/v2/${WORKSPACE}/${COUNTER}`;
 
-  function formatCount(num) {
-    return num.toLocaleString();
+function formatCount(num) {
+  return num.toLocaleString();
+}
+
+// Fetch current counter value
+async function loadCount() {
+  try {
+    const res = await fetch(API_BASE, {
+      headers: {
+        'Authorization': `Bearer ${API_KEY}`
+      }
+    });
+    const data = await res.json();
+    document.getElementById('dlCount').textContent = formatCount(data.value ?? 0);
+  } catch (err) {
+    console.error('Failed to fetch counter', err);
+  }
+}
+
+// Increment counter and trigger download
+async function handleDownload() {
+  try {
+    // Increment counter
+    await fetch(`${API_BASE}/up`, {
+      method: 'GET',
+      headers: {
+        'Authorization': `Bearer ${API_KEY}`
+      }
+    });
+    // Refresh counter immediately
+    loadCount();
+  } catch (err) {
+    console.error('Failed to increment counter', err);
   }
 
-  async function loadCount() {
-    try {
-      const res = await fetch(API_BASE);
-      const data = await res.json();
-      document.getElementById('dlCount').textContent = formatCount(data.value ?? 0);
-    } catch (err) {
-      console.error('Failed to fetch counter', err);
-    }
-  }
+  // Trigger download
+  const a = document.createElement('a');
+  a.href = APK_URL;
+  a.download = 'SIMOVE-v1.1.0.apk';
+  document.body.appendChild(a);
+  a.click();
+  document.body.removeChild(a);
 
-  async function handleDownload() {
-    // Increment counter first
-    try {
-      await fetch(API_BASE + '/up', { method: 'POST' });
-      loadCount(); // refresh counter immediately
-    } catch (err) {
-      console.error('Failed to increment counter', err);
-    }
+  // Toast notification
+  const t = document.getElementById('toast');
+  t.classList.add('show');
+  setTimeout(() => t.classList.remove('show'), 3500);
+}
 
-    // Trigger download
-    const a = document.createElement('a');
-    a.href = APK_URL;
-    a.download = 'SIMOVE-v1.1.0.apk';
-    document.body.appendChild(a);
-    a.click();
-    document.body.removeChild(a);
-
-    // Toast notification
-    const t = document.getElementById('toast');
-    t.classList.add('show');
-    setTimeout(() => t.classList.remove('show'), 3500);
-  }
-
-  // Load initial count and refresh every 10 seconds
-  loadCount();
-  setInterval(loadCount, 10000);
+// Load initial count and refresh every 10 seconds
+loadCount();
+setInterval(loadCount, 10000);
 </script>
 
 </body>
