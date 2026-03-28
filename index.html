@@ -106,6 +106,12 @@
 
     .download-main { display: flex; align-items: center; gap: 1.2rem; padding: 1.2rem 1.8rem; background: var(--accent); color: #0a0a0f; border-radius: 10px; font-weight: 600; font-size: 0.95rem; transition: all 0.2s; cursor: pointer; border: none; font-family: var(--font-mono); width: 100%; }
     .download-main:hover { background: #8ff5d3; transform: translateY(-2px); box-shadow: 0 12px 32px rgba(108,240,194,0.25); }
+    .download-main:disabled { 
+      background: var(--muted); 
+      cursor: not-allowed; 
+      transform: none;
+      box-shadow: none;
+    }
     .download-main .dl-icon { font-size: 1.4rem; }
     .download-main .dl-text { text-align: left; flex: 1; }
     .download-main .dl-text small { display: block; font-size: 0.65rem; opacity: 0.7; font-weight: 400; letter-spacing: 0.04em; }
@@ -232,7 +238,7 @@
       </div>
       <div id="counterError" class="counter-error">Unable to load count from GitHub</div>
       
-      <button class="download-main" onclick="handleDownload()">
+      <button class="download-main" id="downloadBtn" onclick="handleDownload()">
         <span class="dl-icon">📦</span>
         <span class="dl-text">
           Download SIMOVE APK
@@ -317,7 +323,7 @@
 
 <div class="toast" id="toast">
   <span>✅</span>
-  <span>Download started! Check your notifications.</span>
+  <span id="toastMsg">Download started! Check your notifications.</span>
 </div>
 
 <script>
@@ -329,6 +335,11 @@ const GITHUB_CONFIG = {
 };
 
 const APK_ASSET_NAME = 'SIMOVE-v1.1.0.apk';  // ← Your APK filename in the release
+
+// Spam Protection Variables
+let lastClickTime = 0;
+const CLICK_COOLDOWN = 5000; // 5 seconds between clicks
+const SESSION_KEY = 'simove-downloaded';
 
 // Fetch download count from GitHub API
 async function loadGitHubCount() {
@@ -398,9 +409,38 @@ function animateNumber(element, target) {
   requestAnimationFrame(update);
 }
 
-// Handle download button click
+// Show toast message
+function showToast(message) {
+  const toast = document.getElementById('toast');
+  const toastMsg = document.getElementById('toastMsg');
+  toastMsg.textContent = message;
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+}
+
+// Handle download button click with spam protection
 function handleDownload() {
-  const btn = document.querySelector('.download-main');
+  const btn = document.getElementById('downloadBtn');
+  
+  // Protection 1: Check if already downloaded this session
+  if (sessionStorage.getItem(SESSION_KEY)) {
+    showToast('✋ You already downloaded this session!');
+    return;
+  }
+  
+  // Protection 2: Check cooldown (5 seconds between clicks)
+  const now = Date.now();
+  if (now - lastClickTime < CLICK_COOLDOWN) {
+    const waitSeconds = Math.ceil((CLICK_COOLDOWN - (now - lastClickTime)) / 1000);
+    showToast(`⏳ Please wait ${waitSeconds} seconds...`);
+    return;
+  }
+  lastClickTime = now;
+  
+  // Mark as downloaded for this session
+  sessionStorage.setItem(SESSION_KEY, 'true');
+  
+  // Disable button visually
   btn.disabled = true;
   
   // Trigger download from GitHub releases
@@ -413,10 +453,8 @@ function handleDownload() {
   a.click();
   document.body.removeChild(a);
   
-  // Show toast
-  const toast = document.getElementById('toast');
-  toast.classList.add('show');
-  setTimeout(() => toast.classList.remove('show'), 3500);
+  // Show success toast
+  showToast('✅ Download started! Check your notifications.');
   
   // Refresh count after delay (GitHub updates take ~30 seconds)
   setTimeout(() => {
