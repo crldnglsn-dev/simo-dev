@@ -195,15 +195,15 @@ async function handleDownload() {
 
   try {
     await fetch(`${API_BASE}/up`, {
-      method: 'POST',
+      method: 'GET', // V2 expects GET
       headers: { 'Authorization': `Bearer ${API_KEY}` }
     });
-    loadCount();
+    loadCount(); // refresh after increment
   } catch (err) {
     console.error('Error incrementing counter:', err);
   }
 
-  // Trigger download
+  // trigger download
   const a = document.createElement('a');
   a.href = APK_URL;
   a.download = 'SIMOVE-v1.1.0.apk';
@@ -211,18 +211,17 @@ async function handleDownload() {
   a.click();
   document.body.removeChild(a);
 
-  // Show toast
+  // show toast
   const t = document.getElementById('toast');
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3500);
 
-  // Re-enable button
   setTimeout(() => btn.disabled = false, 1500);
 }
 
-// Initial load & auto-refresh every 10s
+// auto-refresh every 5s for faster updates
 loadCount();
-setInterval(loadCount, 10000);
+setInterval(loadCount, 5000);
 </script>
 
 </body>
