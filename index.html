@@ -177,16 +177,18 @@ const API_KEY = 'ut_JWGub5naMQPoY86Xbnocz6zykSENmS9gDkEgWES9';
 const API_BASE = `https://api.counterapi.dev/v2/${WORKSPACE}/${COUNTER}`;
 const APK_URL = 'https://github.com/crldnglsn-dev/simove/releases/download/v1.1.0/SIMOVE-v1.1.0.apk';
 
+// Load counter value
 async function loadCount() {
   try {
     const res = await fetch(`${API_BASE}`);
     const data = await res.json();
     document.getElementById('dlCount').textContent = Number(data.value).toLocaleString();
   } catch (err) {
-    console.error(err);
+    console.error('Error loading count:', err);
   }
 }
 
+// Handle download + increment
 async function handleDownload() {
   const btn = document.querySelector('.download-main');
   btn.disabled = true;
@@ -198,10 +200,10 @@ async function handleDownload() {
     });
     loadCount();
   } catch (err) {
-    console.error(err);
+    console.error('Error incrementing counter:', err);
   }
 
-  // trigger download
+  // Trigger download
   const a = document.createElement('a');
   a.href = APK_URL;
   a.download = 'SIMOVE-v1.1.0.apk';
@@ -209,16 +211,16 @@ async function handleDownload() {
   a.click();
   document.body.removeChild(a);
 
-  // show toast
+  // Show toast
   const t = document.getElementById('toast');
   t.classList.add('show');
   setTimeout(() => t.classList.remove('show'), 3500);
 
-  // re-enable button
+  // Re-enable button
   setTimeout(() => btn.disabled = false, 1500);
 }
 
-// initial load & auto-refresh
+// Initial load & auto-refresh every 10s
 loadCount();
 setInterval(loadCount, 10000);
 </script>
