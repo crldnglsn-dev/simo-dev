@@ -92,6 +92,14 @@
       transform: translateY(0);
     }
 
+    /* Error state for counter */
+    .counter-error {
+      color: var(--muted);
+      font-size: 0.75rem;
+      margin-top: 0.5rem;
+      opacity: 0.7;
+    }
+
     /* ====== Responsive ====== */
     @media (max-width:768px){ nav{padding:1rem 1.5rem;} .nav-links{display:none;} section{padding:4rem 1.5rem;} .hero{padding:0 1.5rem;} .app-card{grid-template-columns:1fr; gap:2rem;} .about-grid{grid-template-columns:1fr;} .footer-inner{grid-template-columns:1fr; text-align:center;} .footer-right{justify-content:center;} .footer-bottom{flex-direction:column; gap:0.5rem; text-align:center;} }
   </style>
@@ -153,6 +161,8 @@
         <div class="counter-dot"></div>
         <span class="counter-text"><span class="counter-num" id="dlCount">—</span> total downloads</span>
       </div>
+      <div id="counterError" class="counter-error" style="display:none;">Unable to load count from GitHub</div>
+      
       <button class="download-main" onclick="handleDownload()">
         <span class="dl-icon">📦</span>
         <span class="dl-text">
@@ -161,7 +171,7 @@
         </span>
         <span class="dl-arrow">↓</span>
       </button>
-      <a href="https://github.com/crldnglsn-dev" target="_blank" class="github-link">
+      <a href="https://github.com/crldnglsn-dev/simove/releases" target="_blank" class="github-link">
         <span>View on GitHub</span> →
       </a>
     </div>
@@ -171,57 +181,119 @@
 <div class="toast" id="toast">Download started!</div>
 
 <script>
-const WORKSPACE = 'crldnglsn-dev';
-const COUNTER = 'simove-downloads';
-const API_KEY = 'ut_JWGub5naMQPoY86Xbnocz6zykSENmS9gDkEgWES9';
-const API_BASE = `https://api.counterapi.dev/v2/${WORKSPACE}/${COUNTER}`;
-const APK_URL = 'https://github.com/crldnglsn-dev/simove/releases/download/v1.1.0/SIMOVE-v1.1.0.apk';
+// GitHub API Configuration
+const GITHUB_CONFIG = {
+  owner: 'crldnglsn-dev',
+  repo: 'simove',
+  tag: 'v1.1.0'
+};
 
-// Load counter value
-async function loadCount() {
+const APK_ASSET_NAME = 'SIMOVE-v1.1.0.apk';
+
+// Fetch download count from GitHub API
+async function loadGitHubCount() {
+  const countEl = document.getElementById('dlCount');
+  const errorEl = document.getElementById('counterError');
+  
   try {
-    const res = await fetch(`${API_BASE}`);
-    const data = await res.json();
-    document.getElementById('dlCount').textContent = Number(data.value).toLocaleString();
+    const response = await fetch(
+      `https://api.github.com/repos/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/releases/tags/${GITHUB_CONFIG.tag}`,
+      {
+        headers: {
+          'Accept': 'application/vnd.github.v3+json'
+        }
+      }
+    );
+    
+    if (!response.ok) {
+      throw new Error(`HTTP ${response.status}`);
+    }
+    
+    const data = await response.json();
+    
+    // Sum download counts from all assets (or find specific APK)
+    let totalDownloads = 0;
+    
+    if (data.assets && data.assets.length > 0) {
+      // Option 1: Sum all assets in the release
+      totalDownloads = data.assets.reduce((sum, asset) => sum + (asset.download_count || 0), 0);
+      
+      // Option 2: Find specific APK file (uncomment if you want specific file only)
+      /*
+      const apkAsset = data.assets.find(asset => asset.name === APK_ASSET_NAME);
+      totalDownloads = apkAsset ? apkAsset.download_count : 0;
+      */
+    }
+    
+    // Animate the number
+    animateNumber(countEl, totalDownloads);
+    errorEl.style.display = 'none';
+    
   } catch (err) {
-    console.error('Error loading count:', err);
+    console.error('GitHub API Error:', err);
+    countEl.textContent = '—';
+    errorEl.style.display = 'block';
   }
 }
 
-// Handle download + increment
-async function handleDownload() {
+// Animate number counting up
+function animateNumber(element, target) {
+  const duration = 1000;
+  const start = 0;
+  const startTime = performance.now();
+  
+  function update(currentTime) {
+    const elapsed = currentTime - startTime;
+    const progress = Math.min(elapsed / duration, 1);
+    
+    // Easing function
+    const easeOutQuart = 1 - Math.pow(1 - progress, 4);
+    const current = Math.floor(start + (target - start) * easeOutQuart);
+    
+    element.textContent = current.toLocaleString();
+    
+    if (progress < 1) {
+      requestAnimationFrame(update);
+    } else {
+      element.textContent = target.toLocaleString();
+    }
+  }
+  
+  requestAnimationFrame(update);
+}
+
+// Handle download button click
+function handleDownload() {
   const btn = document.querySelector('.download-main');
   btn.disabled = true;
-
-  try {
-    await fetch(`${API_BASE}/up`, {
-      method: 'GET', // V2 expects GET
-      headers: { 'Authorization': `Bearer ${API_KEY}` }
-    });
-    loadCount(); // refresh after increment
-  } catch (err) {
-    console.error('Error incrementing counter:', err);
-  }
-
-  // trigger download
+  
+  // Trigger download from GitHub releases
+  const apkUrl = `https://github.com/${GITHUB_CONFIG.owner}/${GITHUB_CONFIG.repo}/releases/download/${GITHUB_CONFIG.tag}/${APK_ASSET_NAME}`;
+  
   const a = document.createElement('a');
-  a.href = APK_URL;
-  a.download = 'SIMOVE-v1.1.0.apk';
+  a.href = apkUrl;
+  a.download = APK_ASSET_NAME;
   document.body.appendChild(a);
   a.click();
   document.body.removeChild(a);
-
-  // show toast
-  const t = document.getElementById('toast');
-  t.classList.add('show');
-  setTimeout(() => t.classList.remove('show'), 3500);
-
-  setTimeout(() => btn.disabled = false, 1500);
+  
+  // Show toast
+  const toast = document.getElementById('toast');
+  toast.classList.add('show');
+  setTimeout(() => toast.classList.remove('show'), 3500);
+  
+  // Refresh count after delay (GitHub updates take ~30 seconds)
+  setTimeout(() => {
+    loadGitHubCount();
+    btn.disabled = false;
+  }, 2000);
 }
 
-// auto-refresh every 5s for faster updates
-loadCount();
-setInterval(loadCount, 5000);
+// Initialize
+loadGitHubCount();
+
+// Auto-refresh every 30 seconds (GitHub caches for ~30s)
+setInterval(loadGitHubCount, 30000);
 </script>
 
 </body>
