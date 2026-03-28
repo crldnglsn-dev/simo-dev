@@ -169,6 +169,76 @@
       margin-top: 0.5rem;
       font-family: var(--font-mono);
     }
+
+    /* Mobile Responsive Styles */
+
+/* Tablet and below (≤1024px) */
+@media (max-width: 1024px) {
+  nav { padding: 1rem 2rem; }
+  .hero { padding: 0 2rem; }
+  section { padding: 4rem 2rem; }
+  .app-card { grid-template-columns: 1fr; gap: 2rem; padding: 2rem; }
+  .about-grid { grid-template-columns: 1fr; gap: 2rem; }
+}
+
+/* Mobile (≤768px) */
+@media (max-width: 768px) {
+  nav { padding: 1rem 1.25rem; flex-direction: column; gap: 0.75rem; }
+  .nav-links { gap: 1.5rem; }
+  .nav-links a { font-size: 0.7rem; }
+  
+  .hero { min-height: auto; padding: 6rem 1.25rem 4rem; flex-direction: column; text-align: center; }
+  .hero-content { max-width: 100%; display: flex; flex-direction: column; align-items: center; }
+  
+  h1 { font-size: clamp(2.5rem, 10vw, 4rem); line-height: 1; }
+  .hero-sub { font-size: 0.9rem; max-width: 100%; }
+  .hero-cta { flex-direction: column; width: 100%; align-items: center; }
+  
+  .btn { width: 100%; max-width: 280px; justify-content: center; }
+  
+  .hero-glow { width: 300px; height: 300px; top: -50px; right: -50px; }
+  .hero-glow2 { width: 250px; height: 250px; }
+  
+  section { padding: 3rem 1.25rem; }
+  .section-title { font-size: clamp(1.5rem, 6vw, 2rem); margin-bottom: 2rem; }
+  
+  .app-card { padding: 1.5rem; border-radius: 12px; }
+  .app-logo-wrap, .app-logo-fallback { width: 60px; height: 60px; border-radius: 16px; }
+  .app-name { font-size: 1.5rem; }
+  .install-steps { padding: 1.25rem; }
+  .step p { font-size: 0.75rem; }
+  
+  .about-stats { grid-template-columns: 1fr 1fr; gap: 1rem; }
+  .stat-card { padding: 1.25rem; }
+  .stat-num { font-size: 1.5rem; }
+  
+  .contact-grid { grid-template-columns: 1fr; }
+  
+  footer { padding: 2rem 1.25rem; }
+  .footer-inner { grid-template-columns: 1fr; text-align: center; gap: 1.5rem; }
+  .footer-right { justify-content: center; flex-wrap: wrap; }
+  .footer-bottom { flex-direction: column; gap: 0.5rem; text-align: center; }
+  
+  .toast { left: 1rem; right: 1rem; bottom: 1rem; justify-content: center; }
+}
+
+/* Small mobile (≤480px) */
+@media (max-width: 480px) {
+  h1 { font-size: 2.2rem; }
+  .hero-tag { font-size: 0.65rem; padding: 0.3rem 0.7rem; }
+  .about-stats { grid-template-columns: 1fr; }
+}
+
+/* Touch device optimizations */
+@media (hover: none) {
+  .btn:hover, .download-main:hover, .contact-card:hover, .github-link:hover, .footer-link:hover { transform: none; }
+}
+
+/* Landscape mode on mobile */
+@media (max-height: 500px) and (orientation: landscape) {
+  .hero { min-height: auto; padding-top: 5rem; padding-bottom: 3rem; }
+  h1 { font-size: 2rem; }
+}
   </style>
 </head>
 <body>
